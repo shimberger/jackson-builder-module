@@ -1,0 +1,1 @@
+Simple experiment to use immutable objects and the builder pattern with Jackson.

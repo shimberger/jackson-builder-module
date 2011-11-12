@@ -1,0 +1,17 @@
+apply plugin: 'eclipse'
+apply plugin: 'java'
+
+group = 'de.himberger.jackson'
+version = '0.1'
+
+repositories {
+  mavenCentral()
+}
+
+dependencies {
+
+  compile 'org.codehaus.jackson:jackson-core-asl:1.9.1'
+  compile 'org.codehaus.jackson:jackson-mapper-asl:1.9.1'
+  
+  testCompile "junit:junit:4.8.2"
+}

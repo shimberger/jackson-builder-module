@@ -1,0 +1,19 @@
+{
+	"server": {
+		"port": 10,
+		"name": "Server Name",
+		"version": "1.0.0"
+	},
+	"plugins": [
+		{
+			"name": "Plugin 1",
+			"params": {
+				"arg-1": "value-1",
+				"arg-2": "value-2"
+			}
+		},
+		{
+			"name": "Plugin 2"
+		}
+	]
+}
