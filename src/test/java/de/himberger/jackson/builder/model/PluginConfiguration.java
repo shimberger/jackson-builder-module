@@ -23,20 +23,23 @@ public class PluginConfiguration {
 		public String getName() {
 			return name;
 		}
-		public void setName(String name) {
+		public Builder setName(String name) {
 			this.name = name;
+			return this;
 		}
 		public boolean isEnabled() {
 			return enabled;
 		}
-		public void setEnabled(boolean enabled) {
+		public Builder setEnabled(boolean enabled) {
 			this.enabled = enabled;
+			return this;
 		}
 		public Map<String, String> getParams() {
 			return params;
 		}
-		public void setParams(Map<String, String> params) {
+		public Builder setParams(Map<String, String> params) {
 			this.params = params;
+			return this;
 		}		
 		
 	}

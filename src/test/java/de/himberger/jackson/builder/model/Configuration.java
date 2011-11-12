@@ -19,8 +19,9 @@ public class Configuration {
 			return server;
 		}
 
-		public void setServer(ServerConfiguration server) {
+		public Builder setServer(ServerConfiguration server) {
 			this.server = server;
+			return this;
 		}
 		
 		public List<PluginConfiguration> getPlugins() {
@@ -28,8 +29,9 @@ public class Configuration {
 		}
 
 		//TODO: This should be done via an add method
-		public void setPlugins(List<PluginConfiguration> plugins) {
+		public Builder setPlugins(List<PluginConfiguration> plugins) {
 			this.plugins = plugins;
+			return this;
 		}
 
 		public Configuration create() {

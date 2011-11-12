@@ -24,24 +24,27 @@ public class ServerConfiguration {
 			return port;
 		}
 
-		public void setPort(int port) {
+		public Builder setPort(int port) {
 			this.port = port;
+			return this;
 		}
 
 		public String getName() {
 			return name;
 		}
 
-		public void setName(String name) {
+		public Builder setName(String name) {
 			this.name = name;
+			return this;
 		}
 
 		public String getVersion() {
 			return version;
 		}
 
-		public void setVersion(String version) {
+		public Builder setVersion(String version) {
 			this.version = version;
+			return this;
 		}
 		
 	}
