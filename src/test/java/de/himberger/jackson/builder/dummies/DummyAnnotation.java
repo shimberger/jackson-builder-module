@@ -1,9 +1,9 @@
-package de.himberger.jackson.builder.model;
+package de.himberger.jackson.builder.dummies;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
 @Retention(RetentionPolicy.RUNTIME)
-public @interface BuilderMethod {
+public @interface DummyAnnotation {
 
 }

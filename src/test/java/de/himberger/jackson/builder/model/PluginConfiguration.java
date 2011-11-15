@@ -16,6 +16,7 @@ public class PluginConfiguration {
 		private boolean enabled;
 		private Map<String,String> params = Collections.<String,String>emptyMap();
 		
+		@CreatesInstance
 		public PluginConfiguration create() {
 			return new PluginConfiguration(this);
 		}
@@ -51,7 +52,7 @@ public class PluginConfiguration {
 		this.params = new HashMap<String,String>(builder.getParams());
 	}
 	
-	@BuilderMethod
+	@CreatesBuilder
 	public static Builder build() {
 		return new Builder();
 	}

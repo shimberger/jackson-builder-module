@@ -16,6 +16,7 @@ public class ServerConfiguration {
 			
 		}
 
+		@CreatesInstance
 		public ServerConfiguration create() {
 			return new ServerConfiguration(this);
 		}
@@ -56,7 +57,7 @@ public class ServerConfiguration {
 		this.version = builder.getVersion();
 	}
 	
-	@BuilderMethod
+	@CreatesBuilder
 	public static Builder getBuilder() {
 		return new Builder();
 	}

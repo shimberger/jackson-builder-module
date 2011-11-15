@@ -34,6 +34,7 @@ public class Configuration {
 			return this;
 		}
 
+		@CreatesInstance
 		public Configuration create() {
 			return new Configuration(this);
 		}
@@ -46,7 +47,7 @@ public class Configuration {
 		this.plugins = new ArrayList<PluginConfiguration>(builder.getPlugins());
 	}
 
-	@BuilderMethod
+	@CreatesBuilder
 	public static Builder getBuilder() {
 		return new Builder();
 	}

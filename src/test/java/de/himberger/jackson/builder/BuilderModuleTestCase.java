@@ -6,15 +6,21 @@ import static org.junit.Assert.assertNotNull;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.junit.Test;
 
-import de.himberger.jackson.builder.model.BuilderMethod;
+import de.himberger.jackson.builder.model.CreatesBuilder;
 import de.himberger.jackson.builder.model.Configuration;
+import de.himberger.jackson.builder.model.CreatesInstance;
 import de.himberger.jackson.builder.model.PluginConfiguration;
 
 public class BuilderModuleTestCase {
 
 	private ObjectMapper getMapper() {
 		ObjectMapper mapper = new ObjectMapper();
-		mapper.registerModule(new BuilderModule(mapper,BuilderMethod.class));
+		BuilderModuleConfiguration conf = BuilderModuleConfiguration.getBuilder()
+			.setObjectMapper(mapper)
+			.setCreateBuilderMethodFinder(new FindMethodByAnnotation(CreatesBuilder.class))
+			.setCreateInstanceMethodFinder(new FindMethodByAnnotation(CreatesInstance.class))
+		.build();		
+		mapper.registerModule(new BuilderModule(conf));
 		return mapper;
 	}
 	

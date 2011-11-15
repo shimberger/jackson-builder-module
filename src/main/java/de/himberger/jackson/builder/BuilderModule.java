@@ -2,20 +2,17 @@ package de.himberger.jackson.builder;
 
 import org.codehaus.jackson.Version;
 import org.codehaus.jackson.map.Module;
-import org.codehaus.jackson.map.ObjectMapper;
 
 public class BuilderModule extends Module {
 
-	public static final Version CURRENT_VERSION = new Version(1,0,0, "");
+	public static final Version CURRENT_VERSION = new Version(1,0,0, "beta");
 	
-	private final Class builderMethodAnnotation;
+	private final BuilderModuleConfiguration configuration;
 	
-	private final ObjectMapper mapper;
-	
-	public BuilderModule(ObjectMapper mapper,Class builderMethodAnnotation) {
+	public BuilderModule(BuilderModuleConfiguration configuration) {
 		super();
-		this.builderMethodAnnotation = builderMethodAnnotation;
-		this.mapper = mapper;
+		// Assumption: No invalid configuration can be constructed
+		this.configuration = configuration;
 	}
 
 	@Override
@@ -27,12 +24,10 @@ public class BuilderModule extends Module {
 	public Version version() {
 		return CURRENT_VERSION;
 	}
-
-	
 	
 	@Override
 	public void setupModule(SetupContext context) {
-		context.appendAnnotationIntrospector(new BuilderAnnotationIntrospector(mapper,builderMethodAnnotation));
+		context.appendAnnotationIntrospector(new BuilderAnnotationIntrospector(configuration));
 		
 	}
 

@@ -7,16 +7,15 @@ import org.codehaus.jackson.JsonParser;
 import org.codehaus.jackson.JsonProcessingException;
 import org.codehaus.jackson.map.DeserializationContext;
 import org.codehaus.jackson.map.JsonDeserializer;
-import org.codehaus.jackson.map.ObjectMapper;
 
 public class BuilderDeserializer extends JsonDeserializer {
 
-	private final ObjectMapper mapper;
+	private final BuilderModuleConfiguration configuration;
 	private final Method builderMethod;
 	
-	public BuilderDeserializer(ObjectMapper mapper, Method builderMethod) {
+	public BuilderDeserializer(BuilderModuleConfiguration configuration, Method builderMethod) {
 		super();
-		this.mapper = mapper;
+		this.configuration = configuration;
 		this.builderMethod = builderMethod;
 	}
 
@@ -26,12 +25,10 @@ public class BuilderDeserializer extends JsonDeserializer {
 		try {
 			Object o = builderMethod.invoke(builderMethod.getDeclaringClass(),new Object[0]);
 			//TODO: This is stupid since the builder has to have a public no-args constructor
-			Object b = mapper.readValue(jp,o.getClass());
-			Method[] methods = b.getClass().getMethods();
-			for (Method method : methods) {
-				if (method.getName().equals("create")) {
-					return method.invoke(b,new Object[0]);
-				}
+			Object builder = configuration.getObjectMapper().readValue(jp,o.getClass());
+			Method createInstanceMethod = configuration.getCreateInstanceMethodFinder().findIn(builder.getClass());
+			if (createInstanceMethod != null) {
+				return createInstanceMethod.invoke(builder,new Object[0]);
 			}
 			return null;
 		} catch (Exception e) {
