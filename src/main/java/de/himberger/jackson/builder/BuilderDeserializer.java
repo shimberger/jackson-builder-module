@@ -7,6 +7,7 @@ import org.codehaus.jackson.JsonParser;
 import org.codehaus.jackson.JsonProcessingException;
 import org.codehaus.jackson.map.DeserializationContext;
 import org.codehaus.jackson.map.JsonDeserializer;
+import org.codehaus.jackson.map.ObjectReader;
 
 public class BuilderDeserializer extends JsonDeserializer {
 
@@ -23,9 +24,9 @@ public class BuilderDeserializer extends JsonDeserializer {
 	public Object deserialize(JsonParser jp, DeserializationContext ctxt)
 			throws IOException, JsonProcessingException {
 		try {
-			Object o = builderMethod.invoke(builderMethod.getDeclaringClass(),new Object[0]);
-			//TODO: This is stupid since the builder has to have a public no-args constructor
-			Object builder = configuration.getObjectMapper().readValue(jp,o.getClass());
+			Object builder = builderMethod.invoke(builderMethod.getDeclaringClass(),new Object[0]);
+			ObjectReader reader = configuration.getObjectMapper().readerForUpdating(builder);
+			reader.readValue(jp);
 			Method createInstanceMethod = configuration.getCreateInstanceMethodFinder().findIn(builder.getClass());
 			if (createInstanceMethod != null) {
 				return createInstanceMethod.invoke(builder,new Object[0]);
