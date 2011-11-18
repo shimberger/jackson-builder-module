@@ -1,17 +1,102 @@
-apply plugin: 'eclipse'
 apply plugin: 'java'
+apply plugin: 'eclipse'
+apply plugin: 'maven'
+apply plugin: 'signing'
 
 group = 'de.himberger.jackson'
-version = '0.1'
+version = '0.1-SNAPSHOT'
+
+isReleaseVersion = true
+if (version.indexOf('SNAPSHOT') != -1) {
+  isReleaseVersion = false
+}
 
 repositories {
   mavenCentral()
 }
 
 dependencies {
-
   compile 'org.codehaus.jackson:jackson-core-asl:1.9.1'
   compile 'org.codehaus.jackson:jackson-mapper-asl:1.9.1'
   
   testCompile "junit:junit:4.8.2"
 }
+
+configurations {
+  published.extendsFrom archives, signatures
+}
+
+signing {
+  if (isReleaseVersion) {
+    sign configurations.archives
+  }
+}
+
+task sourcesJar(type: Jar, dependsOn:classes) { 
+  classifier = 'sources' 
+  from sourceSets.main.allSource 
+} 
+
+task javadocJar(type: Jar, dependsOn:javadoc) { 
+  classifier = 'javadoc' 
+  from javadoc.destinationDir 
+}
+
+artifacts {
+  archives jar
+  archives sourcesJar 
+  archives javadocJar    
+}
+
+uploadPublished {
+  repositories {
+    mavenDeployer {
+      beforeDeployment { MavenDeployment deployment -> signPom(deployment) }
+      repository(url: mvnRepoURL ) {
+        authentication(userName: mvnRepoUser, password: mvnRepoPassword )
+      }
+      pom.project {
+        name 'jackson-builder-module'
+        packaging 'jar'
+        description 'Module to use builder pattern with Jackson'
+         url 'https://github.com/shimberger/jackson-builder-module'
+         scm {
+           url 'scm:git://github.com/shimberger/jackson-builder-module.git'
+           connection 'scm:git://github.com/shimberger/jackson-builder-module.git'
+           developerConnection 'scm:git://github.com/shimberger/jackson-builder-module.git'
+         }
+         licenses {
+           license {
+             name 'The Apache Software License, Version 2.0'
+             url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+             distribution 'repo'
+           }
+         }
+         developers {
+           developer {
+             id 'shimberger'
+             name 'Sebastian Himberger'
+           }
+         }
+       }
+       
+       //HACK: Set packaging in XML manually
+       //Apparently this is needed for Maven Central
+       pom.withXml { XmlProvider xmlProvider ->
+         def xml = xmlProvider.asString()
+         def pomXml = new XmlParser().parse(new ByteArrayInputStream(xml.toString().bytes))
+
+         pomXml.version[0] + { packaging('jar') }
+
+         def newXml = new StringWriter()
+         def printer = new XmlNodePrinter(new PrintWriter(newXml))
+         printer.preserveWhitespace = true
+         printer.print(pomXml)
+         xml.setLength(0)
+         xml.append(newXml.toString())
+       }
+    }
+  }
+}
+
+
